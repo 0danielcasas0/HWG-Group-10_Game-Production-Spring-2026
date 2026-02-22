@@ -4,6 +4,8 @@ using UnityEngine;
 // Gives access to the New Input System
 using UnityEngine.InputSystem;
 
+
+
 // Defines a component that can be attached to a GameObject
 public class PlayerMovement : MonoBehaviour
 {
@@ -58,13 +60,23 @@ public class PlayerMovement : MonoBehaviour
     private bool IsExhausted;                    // Prevents sprinting when stamina hits zero
     #endregion
 
+    #region === Interaction Settings ===
+    // Groups interaction-related variables in the Inspector
+    [Header("Interaction Settings")]
+    public float interactRange = 3f;
+    public LayerMask interactableLayer; // Assign this in Inspector!
+    #endregion
+
     #region === Unity Lifecycle ===
+    // Reference PlayerStats for potential future use (e.g. checking if player is caught or has key)
+    private PlayerStats playerStats;
 
     // Called once when the script starts
     void Start()
     {
         rb = GetComponent<Rigidbody>();           // Gets the Rigidbody attached to this GameObject
         Cursor.lockState = CursorLockMode.Locked; // Locks the mouse to the game window
+        playerStats = GetComponent<PlayerStats>(); // Gets the PlayerStats component on the same GameObject
     }
 
     // Called once per frame
@@ -84,6 +96,29 @@ public class PlayerMovement : MonoBehaviour
 
     #region === Input Callbacks ===
 
+    // Input callback methods are called by the Unity Input System when the corresponding input actions are triggered
+
+    // OnInteract check what the player is looking at and interact with it if possible (e.g. picking up keys, opening doors)
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started) 
+        {
+            Debug.Log("Interact button pressed, checking for interactables...");
+            
+            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+            Debug.DrawRay(ray.origin, ray.direction * interactRange, Color.red, 2f);
+
+            // Added QueryTriggerInteraction.Collide to include Triggers in the raycast
+            if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayer, QueryTriggerInteraction.Collide))
+            {
+                if (hit.collider.TryGetComponent(out IInteractable interactable))
+                {
+                    interactable.Interact();
+                }
+            }
+        }
+    }
+
     // Called by the Input System when movement input changes
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -98,11 +133,14 @@ public class PlayerMovement : MonoBehaviour
         {
             // Scales the player down vertically to crouch
             transform.localScale = new Vector3(1, CrouchHeight / NormalHeight, 1);
+            playerStats.IsStealthy = true;
         }
         else if (context.canceled)                // When crouch button is released
         {
             // Resets player scale to normal height
             transform.localScale = new Vector3(1, 1, 1);
+            playerStats.IsStealthy = false;
+
         }
     }
 
