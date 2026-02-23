@@ -13,7 +13,7 @@ public class AudioSettings : MonoBehaviour
     void Awake()
 	{
 		ContinueSettings();
-		TrainInteriorSFX.volume = soundEffectsVolume * .3f;
+		TrainInteriorSFX.volume = soundEffectsVolume * .5f;
     }
 
 	private void ContinueSettings()
