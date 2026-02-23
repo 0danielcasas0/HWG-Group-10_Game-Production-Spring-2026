@@ -3,17 +3,22 @@ using UnityEngine;
 
 public class WinLose : MonoBehaviour
 {
-    public MonoBehaviour PlayerMovement;
-    public MonoBehaviour Enemy;
-    public GameObject WinScreen;
-    public GameObject LoseScreen;
+    [SerializeField] private GameObject Player;
+    [SerializeField] private MonoBehaviour Enemy;
 
-    public PlayerStats playerStats;
+    [SerializeField] private GameObject WinScreen;
+    [SerializeField] private GameObject LoseScreen;
+
+    private PlayerMovement PlayerMovement;
+    private PlayerStats playerStats;
 
     private bool gameEnded;
     void Awake()
     {
         Time.timeScale = 1f;
+
+        PlayerMovement = Player.GetComponent<PlayerMovement>();
+        playerStats = Player.GetComponent<PlayerStats>();
     }
 
     void Update()
@@ -48,7 +53,7 @@ public class WinLose : MonoBehaviour
         if (PlayerMovement != null)
             PlayerMovement.enabled = false;
 
-        // Stop camera look.
+        // Stop enemy.
         if (Enemy != null)
             Enemy.enabled = false;
 
