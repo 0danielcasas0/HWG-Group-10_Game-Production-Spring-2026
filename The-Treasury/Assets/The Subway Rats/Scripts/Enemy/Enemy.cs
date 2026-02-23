@@ -33,11 +33,11 @@ public class Enemy : MonoBehaviour
         // If the player IsStealthy, the enemy should have a reduced detection range or ignore the player entirely
         if (playerStats.IsStealthy == true)
         {
-            DetectionRange *= 0.5f; // Example: reduce detection range by half when player is stealthy
+            DetectionRange = 3f; // Example: reduce detection range to half when player is stealthy
         }
         else 
         {
-            DetectionRange = 10f; // Reset detection range to default value
+            DetectionRange = 7f; // Reset detection range to default value
         }
 
         if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange)
