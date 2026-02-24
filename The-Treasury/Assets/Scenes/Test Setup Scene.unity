@@ -6841,6 +6841,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7419546550751596772, guid: a9a133ca557136e4cacbf27fabe41c67, type: 3}
+      propertyPath: CaughtTimer
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7419546550751596772, guid: a9a133ca557136e4cacbf27fabe41c67, type: 3}
+      propertyPath: CatchDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7419546550751596772, guid: a9a133ca557136e4cacbf27fabe41c67, type: 3}
       propertyPath: Waypoints.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -7045,6 +7053,10 @@ PrefabInstance:
     - target: {fileID: 7158048602284029991, guid: f29bc07ff61f6074b9c0a7ad80686b37, type: 3}
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7348060134946290724, guid: f29bc07ff61f6074b9c0a7ad80686b37, type: 3}
+      propertyPath: GrabbedSpeedMultiplier
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 7348060134946290724, guid: f29bc07ff61f6074b9c0a7ad80686b37, type: 3}
       propertyPath: interactableLayer.m_Bits

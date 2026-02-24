@@ -7,4 +7,5 @@ public class PlayerStats : MonoBehaviour
     public bool IsCaught = false;
     public bool HasKey = false;
     public bool IsStealthy = false;
+    public bool IsGrabbed = false;
 }
