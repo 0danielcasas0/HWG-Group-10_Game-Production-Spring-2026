@@ -6,8 +6,8 @@ public class Enemy : MonoBehaviour
     [Header("Enemy Settings")]
     public float DetectionRange = 10f;
     public Transform PlayerTransform;
-    public float CaughtTimer = 1f; // Time in seconds the player needs to be within range to be caught
-    public float CatchDistance = 3f; // Distance at which the player is considered caught
+    public float CaughtTimer = 3f; // Time in seconds the player needs to be within range to be caught
+    public float CatchDistance = 2f; // Distance at which the player is considered caught
 
     [Header("Patrol Settings")]
     public Transform[] Waypoints;
@@ -20,64 +20,15 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        // Get reference to PlayerStats on the player GameObject
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        playerStats = player.GetComponent<PlayerStats>();
 
         agent = GetComponent<NavMeshAgent>();
-
         FindPlayer();
-        FindPlayerStats();
     }
 
     private void Update()
-    {
-        Chase();
-        Hearing();
-        Catch();
-        Grabbing();
-    }
-
-    private void FindPlayer()
-    {
-        if (PlayerTransform == null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null) PlayerTransform = player.transform;
-        }
-    }
-
-    public void FindPlayerStats()
-    {
-        if (playerStats == null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null) playerStats = player.GetComponent<PlayerStats>();
-        }
-    }
-
-    private void Patrol()
-    {
-        // Set the destination to the current waypoint
-        agent.SetDestination(Waypoints[currentWaypointIndex].position);
-
-        // Check if we've arrived
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-        {
-            currentWaypointIndex = (currentWaypointIndex + 1) % Waypoints.Length;
-        }
-    }
-
-    private void Chase()
-    {
-        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange)
-        {
-            agent.SetDestination(PlayerTransform.position);
-        }
-        else if (Waypoints.Length > 0)
-        {
-            Patrol();
-        }
-    }
-
-    public void Hearing()
     {
         // If the player IsStealthy, the enemy should have a reduced detection range or ignore the player entirely
         if (playerStats.IsStealthy == true)
@@ -88,10 +39,16 @@ public class Enemy : MonoBehaviour
         {
             DetectionRange = 7f; // Reset detection range to default value
         }
-    }
 
-    public void Catch()
-    {
+        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange)
+        {
+            agent.SetDestination(PlayerTransform.position);
+        }
+        else if (Waypoints.Length > 0)
+        {
+            Patrol();
+        }
+
         // Check if the enemy has reached within 2 units of the player for CaughtTimer to trigger the caught state
         if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= CatchDistance)
         {
@@ -108,17 +65,24 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Grabbing()
+    private void FindPlayer()
     {
-        // This method will slow the player if they are within a certain range of the enemy, simulating the grabbing mechanic.
-        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= CatchDistance)
+        if (PlayerTransform == null)
         {
-            playerStats.IsGrabbed = true; // Set the player's grabbed state to true
-            Debug.Log("Player has been grabbed!");
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null) PlayerTransform = player.transform;
         }
-        else
+    }
+
+    private void Patrol()
+    {
+        // Set the destination to the current waypoint
+        agent.SetDestination(Waypoints[currentWaypointIndex].position);
+
+        // Check if we've arrived
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            playerStats.IsGrabbed = false; // Reset the grabbed state if the player moves out of range
+            currentWaypointIndex = (currentWaypointIndex + 1) % Waypoints.Length;
         }
     }
 }

@@ -40,14 +40,6 @@ public class PlayerMovement : MonoBehaviour
     private float currentSpeedMultiplier = 1f;  // Active speed multiplier
     #endregion
 
-    #region === Grabbed Settings ===
-    // Groups grabbed-related variables in the Inspector
-    [Header("Grabbed Settings")]
-    [Range(0f, 1f)]
-    public float GrabbedSpeedMultiplier = 0.25f; // Speed multipliers when grabbed (e.g., 0.1f for 10% speed)
-    
-    #endregion
-
     #region === Crouch Settings ===
     // Groups crouch-related variables in the Inspector
     [Header("Crouch Settings")]
@@ -98,7 +90,6 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleMove();                             // Handles movement physics
         HandleStamina();                          // Handles stamina drain and regen
-        HandleGrabbed();                          // Adjusts movement if player is grabbed
     }
 
     #endregion
@@ -255,22 +246,6 @@ public class PlayerMovement : MonoBehaviour
         CurrentStamina = Mathf.Clamp(CurrentStamina, 0, MaxStamina);
     }
 
-    #endregion
-
-    #region === Grabbed Logic ===
-    // This method can be called by an enemy when the player is grabbed
-    public void HandleGrabbed()
-    {
-        // If the player is grabbed, reduce movement speed significantly
-        if (playerStats.IsGrabbed)
-        {
-            currentSpeedMultiplier = GrabbedSpeedMultiplier; // Example: reduce speed to 10% when grabbed
-        }
-        else
-        {
-            currentSpeedMultiplier = 1f; // Reset speed multiplier when not grabbed
-        }
-    }
     #endregion
 
     #region === Collision Handling ===
