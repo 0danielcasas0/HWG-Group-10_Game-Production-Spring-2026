@@ -17,6 +17,35 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 MoveInput;                   // Stores movement input (WASD / left stick)
     #endregion
 
+    #region === Movement Audio ===
+    // Groups movement-related variables in the Inspector
+    [Header("Movement Audio")]
+    public AudioSource FootstepAudioSource;      // AudioSource for footstep sounds
+    public float movementThreshold = 0.1f;              // Minimum input magnitude to play footstep sounds
+
+    void HandleFootsteps()
+    {
+        // Get horizontal velocity only
+        Vector3 horizontalVelocity = rb.linearVelocity;
+        horizontalVelocity.y = 0f;
+
+        bool isMoving = horizontalVelocity.magnitude > movementThreshold;
+        bool isGrounded = IsGrounded;
+
+        if (isMoving && isGrounded)
+        {
+            if (!FootstepAudioSource.isPlaying)
+                FootstepAudioSource.Play();
+        }
+        else
+        {
+            if (FootstepAudioSource.isPlaying)
+                FootstepAudioSource.Stop();
+        }
+    }
+
+    #endregion
+
     #region === Look Settings ===
     // Groups look-related variables in the Inspector
     [Header("Look Settings")]
@@ -90,6 +119,7 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleMove();                             // Handles movement physics
         HandleStamina();                          // Handles stamina drain and regen
+        HandleFootsteps();                       // Handles footstep audio based on movement
     }
 
     #endregion

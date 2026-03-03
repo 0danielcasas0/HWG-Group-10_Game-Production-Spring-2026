@@ -43,10 +43,15 @@ public class Enemy : MonoBehaviour
         if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange)
         {
             agent.SetDestination(PlayerTransform.position);
+            playerStats.PlayerSeen = true;
         }
-        else if (Waypoints.Length > 0)
+        else
         {
-            Patrol();
+            playerStats.PlayerSeen = false;
+            if (Waypoints.Length > 0)
+            {
+                Patrol();
+            }
         }
 
         // Check if the enemy has reached within 2 units of the player for CaughtTimer to trigger the caught state
