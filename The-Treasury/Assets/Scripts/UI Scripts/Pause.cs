@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
+    public GameObject SettingsMenu;
     [SerializeField] private PlayerMovement PlayerMovement;
 
     private bool isPaused;
@@ -41,6 +42,7 @@ public class PauseMenu : MonoBehaviour
             PlayerMovement.enabled = true;
 
         pauseMenu.SetActive(false);
+        SettingsMenu.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
