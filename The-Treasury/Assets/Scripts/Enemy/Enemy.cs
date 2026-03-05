@@ -1,157 +1,93 @@
 using UnityEngine;
-using UnityEngine.AI;
+using UnityEngine.AI; // Required for NavMesh
 
 public class Enemy : MonoBehaviour
 {
     [Header("Enemy Settings")]
     public float DetectionRange = 10f;
-    public float ViewAngle = 90f; 
-    public float HearingRange = 7f; 
     public Transform PlayerTransform;
-    public float CaughtTimer = 1f; 
-    public float CatchDistance = 3f; 
-    public LayerMask SightLayers = -1; 
+    public float CaughtTimer = 3f; // Time in seconds the player needs to be within range to be caught
+    public float CatchDistance = 2f; // Distance at which the player is considered caught
 
     [Header("Patrol Settings")]
     public Transform[] Waypoints;
-    private int CurrentWaypointIndex = 0;
+    private int currentWaypointIndex = 0;
 
-    // References and internal states
-    private PlayerStats PlayerStatsRef;
-    private NavMeshAgent EnemyAgent;
-    private Vector3 LastKnownLocation;
-    private bool IsPlayerDetected;
+    // Reference to the Player's stats for potential future use (e.g. checking if player is caught)
+    private PlayerStats playerStats;
+
+    private NavMeshAgent agent; // Reference to the agent
 
     private void Start()
     {
+        // Get reference to PlayerStats on the player GameObject
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            PlayerStatsRef = player.GetComponent<PlayerStats>();
-            PlayerTransform = player.transform;
-        }
+        playerStats = player.GetComponent<PlayerStats>();
 
-        EnemyAgent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
+        FindPlayer();
     }
 
     private void Update()
     {
-        StealthCheck();
-        SensePlayer(); 
-        HandleMovement();
-        Catch();
-    }
-
-    private void SensePlayer()
-    {
-        // Enemy is alerted if they see OR hear the player
-        if (CanSeePlayer() || CanHearPlayer())
+        // If the player IsStealthy, the enemy should have a reduced detection range or ignore the player entirely
+        if (playerStats.IsStealthy == true)
         {
-            IsPlayerDetected = true;
-            LastKnownLocation = PlayerTransform.position;
+            DetectionRange = 3f; // Example: reduce detection range to half when player is stealthy
+        }
+        else 
+        {
+            DetectionRange = 7f; // Reset detection range to default value
+        }
+
+        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange)
+        {
+            agent.SetDestination(PlayerTransform.position);
+            playerStats.PlayerSeen = true;
         }
         else
         {
-            IsPlayerDetected = false;
-        }
-    }
-
-    private bool CanSeePlayer()
-    {
-        if (PlayerTransform == null) return false;
-
-        float distanceToPlayer = Vector3.Distance(transform.position, PlayerTransform.position);
-        
-        if (distanceToPlayer <= DetectionRange)
-        {
-            Vector3 directionToPlayer = (PlayerTransform.position - transform.position).normalized;
-            float angleBetweenEnemyAndPlayer = Vector3.Angle(transform.forward, directionToPlayer);
-
-            if (angleBetweenEnemyAndPlayer < ViewAngle / 2f)
+            playerStats.PlayerSeen = false;
+            if (Waypoints.Length > 0)
             {
-                Vector3 origin = transform.position + Vector3.up;
-                Vector3 target = PlayerTransform.position + Vector3.up;
-
-                if (Physics.Raycast(origin, directionToPlayer, out RaycastHit hit, distanceToPlayer, SightLayers))
-                {
-                    if (hit.transform == PlayerTransform) return true;
-                }
+                Patrol();
             }
         }
-        return false;
-    }
 
-    private bool CanHearPlayer()
-    {
-        if (PlayerTransform == null || PlayerStatsRef == null) return false;
-
-        float distanceToPlayer = Vector3.Distance(transform.position, PlayerTransform.position);
-
-        if (PlayerStatsRef.IsStealthy) return false;
-
-        if (distanceToPlayer <= HearingRange)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private void HandleMovement()
-    {
-        if (IsPlayerDetected)
-        {
-            EnemyAgent.SetDestination(PlayerTransform.position);
-        }
-        else if (Waypoints.Length > 0)
-        {
-            Patrol();
-        }
-    }
-
-    private void Patrol()
-    {
-        EnemyAgent.SetDestination(Waypoints[CurrentWaypointIndex].position);
-
-        if (!EnemyAgent.pathPending && EnemyAgent.remainingDistance <= EnemyAgent.stoppingDistance)
-        {
-            CurrentWaypointIndex = (CurrentWaypointIndex + 1) % Waypoints.Length;
-        }
-    }
-
-    private void Catch()
-    {
-        // REQUIREMENT: Must be within distance AND visible to be caught
-        bool isWithinRange = PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= CatchDistance;
-        
-        if (isWithinRange && CanSeePlayer())
+        // Check if the enemy has reached within 2 units of the player for CaughtTimer to trigger the caught state
+        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= CatchDistance)
         {
             CaughtTimer -= Time.deltaTime;
-            
             if (CaughtTimer <= 0f)
             {
-                PlayerStatsRef.IsCaught = true;
+                playerStats.IsCaught = true; // Set the player's caught state to true
                 Debug.Log("Player has been caught!");
             }
         }
         else
         {
-            // Reset the timer if the player breaks line of sight or moves away
-            CaughtTimer = 1f; 
+            CaughtTimer = 3f; // Reset the timer if the player moves out of range
         }
     }
 
-    private void StealthCheck()
+    private void FindPlayer()
     {
-        if (PlayerStatsRef != null && PlayerStatsRef.IsStealthy)
+        if (PlayerTransform == null)
         {
-            DetectionRange = 5f;
-            HearingRange = 3f; 
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null) PlayerTransform = player.transform;
         }
-        else
+    }
+
+    private void Patrol()
+    {
+        // Set the destination to the current waypoint
+        agent.SetDestination(Waypoints[currentWaypointIndex].position);
+
+        // Check if we've arrived
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            DetectionRange = 10f;
-            HearingRange = 7f;
+            currentWaypointIndex = (currentWaypointIndex + 1) % Waypoints.Length;
         }
     }
 }

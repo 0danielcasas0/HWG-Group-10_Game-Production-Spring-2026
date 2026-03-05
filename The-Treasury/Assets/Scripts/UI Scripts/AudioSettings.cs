@@ -7,13 +7,16 @@ public class AudioSettings : MonoBehaviour
 	private float BGMVolume;
 	private float soundEffectsVolume;
 	public AudioSource BGMSource;
-	public AudioSource[] soundEffectsAudio;
+	public AudioSource BGMChaseSource;
+    public AudioSource[] soundEffectsAudio;
 	public AudioSource TrainInteriorSFX;
+	public AudioSource FootstepsSFX;
 
     void Awake()
 	{
 		ContinueSettings();
 		TrainInteriorSFX.volume = soundEffectsVolume * .5f;
+		FootstepsSFX.volume = soundEffectsVolume * .5f;
     }
 
 	private void ContinueSettings()
@@ -24,10 +27,11 @@ public class AudioSettings : MonoBehaviour
 
         // Set BGM Audiosource.
         BGMSource.volume = BGMVolume;
+		BGMChaseSource.volume = BGMVolume;
 
-		// Lets you put a number for the amount of sound effects in the
-		// scene that it will control the volume of.
-		for (int i = 0; i < soundEffectsAudio.Length; i++)
+        // Lets you put a number for the amount of sound effects in the
+        // scene that it will control the volume of.
+        for (int i = 0; i < soundEffectsAudio.Length; i++)
 		{
 			soundEffectsAudio[i].volume = soundEffectsVolume;
 		}
