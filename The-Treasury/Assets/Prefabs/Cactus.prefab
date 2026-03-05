@@ -103,5 +103,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlyBy
   Speed: 125
-  zLimit: 300
+  zLimit: 250
   zReset: -500
