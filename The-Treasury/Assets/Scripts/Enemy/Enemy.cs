@@ -30,44 +30,9 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        // If the player IsStealthy, the enemy should have a reduced detection range or ignore the player entirely
-        if (playerStats.IsStealthy == true)
-        {
-            DetectionRange = 3f; // Example: reduce detection range to half when player is stealthy
-        }
-        else 
-        {
-            DetectionRange = 7f; // Reset detection range to default value
-        }
-
-        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange)
-        {
-            agent.SetDestination(PlayerTransform.position);
-            playerStats.PlayerSeen = true;
-        }
-        else
-        {
-            playerStats.PlayerSeen = false;
-            if (Waypoints.Length > 0)
-            {
-                Patrol();
-            }
-        }
-
-        // Check if the enemy has reached within 2 units of the player for CaughtTimer to trigger the caught state
-        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= CatchDistance)
-        {
-            CaughtTimer -= Time.deltaTime;
-            if (CaughtTimer <= 0f)
-            {
-                playerStats.IsCaught = true; // Set the player's caught state to true
-                Debug.Log("Player has been caught!");
-            }
-        }
-        else
-        {
-            CaughtTimer = 3f; // Reset the timer if the player moves out of range
-        }
+        StealthCheck();
+        Chase();
+        Catch();
     }
 
     private void FindPlayer()
@@ -88,6 +53,54 @@ public class Enemy : MonoBehaviour
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
             currentWaypointIndex = (currentWaypointIndex + 1) % Waypoints.Length;
+        }
+    }
+
+    private void Chase()
+    {
+        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange)
+        {
+            agent.SetDestination(PlayerTransform.position);
+            playerStats.PlayerSeen = true;
+        }
+        else
+        {
+            playerStats.PlayerSeen = false;
+            if (Waypoints.Length > 0)
+            {
+                Patrol();
+            }
+        }
+    }
+
+    private void StealthCheck()
+    {
+        // If the player IsStealthy, the enemy should have a reduced detection range or ignore the player entirely
+        if (playerStats.IsStealthy == true)
+        {
+            DetectionRange = 3f; // Example: reduce detection range to half when player is stealthy
+        }
+        else 
+        {
+            DetectionRange = 7f; // Reset detection range to default value
+        }
+    }
+
+    private void Catch()
+    {
+        // Check if the enemy has reached within 2 units of the player for CaughtTimer to trigger the caught state
+        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= CatchDistance)
+        {
+            CaughtTimer -= Time.deltaTime;
+            if (CaughtTimer <= 0f)
+            {
+                playerStats.IsCaught = true; // Set the player's caught state to true
+                Debug.Log("Player has been caught!");
+            }
+        }
+        else
+        {
+            CaughtTimer = 3f; // Reset the timer if the player moves out of range
         }
     }
 }
