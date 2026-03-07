@@ -117,6 +117,8 @@ public class PlayerMovement : MonoBehaviour
     // Called at a fixed time step (used for physics)
     void FixedUpdate()
     {
+        if (playerStats.IsHiding) return;
+
         HandleMove();                             // Handles movement physics
         HandleStamina();                          // Handles stamina drain and regen
         HandleFootsteps();                       // Handles footstep audio based on movement
@@ -159,6 +161,8 @@ public class PlayerMovement : MonoBehaviour
     // Called by the Input System when crouch input changes
     public void OnCrouch(InputAction.CallbackContext context)
     {
+        if (playerStats.IsHiding) return;
+
         if (context.performed)                    // When crouch button is pressed
         {
             // Scales the player down vertically to crouch
@@ -177,6 +181,8 @@ public class PlayerMovement : MonoBehaviour
     // Called by the Input System when jump input changes
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (playerStats.IsHiding) return;
+
         // Only jump when the button is first pressed AND the player is grounded
         if (context.started && IsGrounded)
         {
