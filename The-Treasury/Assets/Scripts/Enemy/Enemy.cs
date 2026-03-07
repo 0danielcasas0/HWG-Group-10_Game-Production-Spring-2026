@@ -4,10 +4,16 @@ using UnityEngine.AI; // Required for NavMesh
 public class Enemy : MonoBehaviour
 {
     [Header("Enemy Settings")]
-    public float DetectionRange = 10f;
+    public float DetectionRange = 5f;
     public Transform PlayerTransform;
-    public float CaughtTimer = 3f; // Time in seconds the player needs to be within range to be caught
+    public EnemyVision Vision;
+    private float ResetCaughtTimer = 1f;
+    public float CaughtTimer = 1f; // Time in seconds the player needs to be within range to be caught
     public float CatchDistance = 2f; // Distance at which the player is considered caught
+
+    [Header("Speed Settings")]
+    public float PatrolSpeed = 2f;
+    public float ChaseSpeed = 5f;
 
     [Header("Patrol Settings")]
     public Transform[] Waypoints;
@@ -25,7 +31,10 @@ public class Enemy : MonoBehaviour
         playerStats = player.GetComponent<PlayerStats>();
 
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = PatrolSpeed;
         FindPlayer();
+
+        ResetCaughtTimer = CaughtTimer;
     }
 
     private void Update()
@@ -58,13 +67,21 @@ public class Enemy : MonoBehaviour
 
     private void Chase()
     {
-        if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange)
+        bool canSeePlayer = false;
+        if (Vision != null)
+        {
+            canSeePlayer = Vision.CanSeePlayer;
+        }
+
+        if (PlayerTransform != null && (Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange || canSeePlayer))
         {
             agent.SetDestination(PlayerTransform.position);
+            agent.speed = ChaseSpeed;
             playerStats.PlayerSeen = true;
         }
         else
         {
+            agent.speed = PatrolSpeed;
             playerStats.PlayerSeen = false;
             if (Waypoints.Length > 0)
             {
@@ -82,7 +99,7 @@ public class Enemy : MonoBehaviour
         }
         else 
         {
-            DetectionRange = 7f; // Reset detection range to default value
+            DetectionRange = 5f; // Reset detection range to default value
         }
     }
 
@@ -100,7 +117,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            CaughtTimer = 3f; // Reset the timer if the player moves out of range
+            CaughtTimer = ResetCaughtTimer; // Reset the timer if the player moves out of range
         }
     }
 }
