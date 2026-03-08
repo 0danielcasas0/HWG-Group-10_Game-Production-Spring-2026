@@ -21,28 +21,46 @@ public class PlayerMovement : MonoBehaviour
     // Groups movement-related variables in the Inspector
     [Header("Movement Audio")]
     public AudioSource FootstepAudioSource;      // AudioSource for footstep sounds
+    public AudioSource RunningAudioSource;             // Audiosource for running sounds
     public float movementThreshold = 0.1f;              // Minimum input magnitude to play footstep sounds
 
     void HandleFootsteps()
     {
-        // Get horizontal velocity only
         Vector3 horizontalVelocity = rb.linearVelocity;
         horizontalVelocity.y = 0f;
 
         bool isMoving = horizontalVelocity.magnitude > movementThreshold;
-        bool isGrounded = IsGrounded;
 
-        if (isMoving && isGrounded)
+        if (isMoving && IsGrounded)
         {
-            if (!FootstepAudioSource.isPlaying)
-                FootstepAudioSource.Play();
+            if (currentSpeedMultiplier > 1f)
+            {
+                if (!RunningAudioSource.isPlaying)
+                    RunningAudioSource.Play();
+
+                if (FootstepAudioSource.isPlaying)
+                    FootstepAudioSource.Stop();
+            }
+            else
+            {
+                if (!FootstepAudioSource.isPlaying)
+                    FootstepAudioSource.Play();
+
+                if (RunningAudioSource.isPlaying)
+                    RunningAudioSource.Stop();
+            }
         }
         else
         {
             if (FootstepAudioSource.isPlaying)
                 FootstepAudioSource.Stop();
+
+            if (RunningAudioSource.isPlaying)
+                RunningAudioSource.Stop();
         }
     }
+
+
 
     #endregion
 

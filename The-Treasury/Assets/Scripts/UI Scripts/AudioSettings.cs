@@ -11,12 +11,14 @@ public class AudioSettings : MonoBehaviour
     public AudioSource[] soundEffectsAudio;
 	public AudioSource TrainInteriorSFX;
 	public AudioSource FootstepsSFX;
+	public AudioSource RunningSFX;
 
     void Awake()
 	{
 		ContinueSettings();
 		TrainInteriorSFX.volume = soundEffectsVolume * .5f;
 		FootstepsSFX.volume = soundEffectsVolume * .5f;
+		RunningSFX.volume = soundEffectsVolume * .5f;
     }
 
 	private void ContinueSettings()

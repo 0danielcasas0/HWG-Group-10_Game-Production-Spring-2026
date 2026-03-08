@@ -180,6 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Crate
   HidePoint: {fileID: 3787055354439093063}
   UnhidePoint: {fileID: 3684550571587149825}
+  BarrelSound: {fileID: 8300000, guid: 54f819250af5264498950d08b6322212, type: 3}
 --- !u!1 &2623918526552697068
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,12 +8,14 @@ public class Key : MonoBehaviour, IInteractable
     public bool IsFloating = true; // Option to enable or disable floating animation
     private Vector3 startPos; // Store the initial position of the key for animation purposes
     public Transform FollowPoint; // Reference to the enemy's transform for following
+    public AudioSource CollectSound; // Sound to play when the key is collected
 
     public void Interact()
     {
         if (playerStats != null && !playerStats.HasKey)
         {
             playerStats.HasKey = true; // Update the player's stats to indicate they have the key
+            CollectSound.Play(); // Play the collection sound effect
             Destroy(gameObject); // Destroy the key object after collection
         }
 

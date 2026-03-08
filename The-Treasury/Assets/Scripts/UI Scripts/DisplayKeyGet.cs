@@ -5,15 +5,28 @@ public class DisplayKeyGet : MonoBehaviour
     public PlayerStats PlayerStats;
     public GameObject KeyGet;
 
+    public float notifDuration = 3f;
+
+    private bool notifTriggered;
+    private float timer;
+
     void Update()
     {
-        if (PlayerStats.HasKey == true)
+        if (PlayerStats.HasKey && !notifTriggered)
         {
             KeyGet.SetActive(true);
+            notifTriggered = true;
+            timer = notifDuration;
         }
-        else
+
+        if (notifTriggered && KeyGet.activeSelf)
         {
-            KeyGet.SetActive(false);
+            timer -= Time.deltaTime;
+
+            if (timer <= 0f)
+            {
+                KeyGet.SetActive(false);
+            }
         }
     }
 }

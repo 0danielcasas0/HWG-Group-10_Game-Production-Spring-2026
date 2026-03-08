@@ -7,6 +7,7 @@ public class Crate : MonoBehaviour, IInteractable
 
     private PlayerStats playerStats;
     private GameObject player;
+    public AudioClip BarrelSound;
 
 
     public void Interact()
@@ -19,7 +20,13 @@ public class Crate : MonoBehaviour, IInteractable
 
         // Resets player scale to normal height
         player.transform.localScale = new Vector3(1, 1, 1);
-        
+
+        // Play sound effect when playter hides or unhides
+        if (BarrelSound != null)
+        {
+            AudioSource.PlayClipAtPoint(BarrelSound, player.transform.position);
+        }
+
 
         if (playerStats.IsHiding)
         {
