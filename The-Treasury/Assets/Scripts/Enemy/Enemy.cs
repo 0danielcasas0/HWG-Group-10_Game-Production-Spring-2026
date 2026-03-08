@@ -54,6 +54,8 @@ public class Enemy : MonoBehaviour
 
     private float searchWaypointTimer = 0f;
 
+    private bool wasDetecting = false;
+
     private void Start()
     {
         // Get reference to PlayerStats on the player GameObject
@@ -75,6 +77,23 @@ public class Enemy : MonoBehaviour
         UpdateState();
         Move();
         Catch();
+
+        // Update detection status for audio
+        bool isDetecting = currentState == EnemyState.Chase || currentState == EnemyState.Searching;
+        if (isDetecting != wasDetecting)
+        {
+            if (isDetecting)
+            {
+                PlayerStats.DetectionCount++;
+                if (PlayerStats.DetectionCount == 1) PlayerStats.IsDetected = true;
+            }
+            else
+            {
+                PlayerStats.DetectionCount--;
+                if (PlayerStats.DetectionCount == 0) PlayerStats.IsDetected = false;
+            }
+            wasDetecting = isDetecting;
+        }
     }
 
     private void FindPlayer()
@@ -291,6 +310,15 @@ public class Enemy : MonoBehaviour
         {
             isCatching = false;
             CaughtTimer = ResetCaughtTimer; // Reset the timer if the player moves out of range
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (wasDetecting)
+        {
+            PlayerStats.DetectionCount--;
+            if (PlayerStats.DetectionCount == 0) PlayerStats.IsDetected = false;
         }
     }
 }

@@ -10,4 +10,8 @@ public class PlayerStats : MonoBehaviour
     public bool PlayerSeen = false;
     public bool IsHiding = false;
     public bool IsMoving = false;
+
+    // Detection tracking for audio
+    public static bool IsDetected = false;
+    public static int DetectionCount = 0;
 }

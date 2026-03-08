@@ -18,13 +18,13 @@ public class DetectionMusic : MonoBehaviour
     }
     void Update()
     {
-        if (PlayerStats.PlayerSeen && !wasPlayerSeen)
+        if (PlayerStats.IsDetected && !wasPlayerSeen)
         {
             Normal.Stop();
             Seen.Play();
             wasPlayerSeen = true;
         }
-        else if (!PlayerStats.PlayerSeen && wasPlayerSeen)
+        else if (!PlayerStats.IsDetected && wasPlayerSeen)
         {
             Seen.Stop();
             Normal.Play();
