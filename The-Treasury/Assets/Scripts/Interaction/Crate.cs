@@ -2,21 +2,37 @@ using UnityEngine;
 
 public class Crate : MonoBehaviour, IInteractable
 {
+    public Transform HidePoint;
+    public Transform UnhidePoint;
+
     private PlayerStats playerStats;
     private GameObject player;
 
 
     public void Interact()
-    {
+    {        Debug.Log("Interacting with crate...");
+
         // Get reference to PlayerStats on the player GameObject
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         playerStats = player.GetComponent<PlayerStats>();
-        playerStats.IsHiding = !playerStats.IsHiding;
+        playerStats.IsHiding = !playerStats.IsHiding;  // Toggle hiding state
+
 
         if (playerStats.IsHiding)
         {
-            player.transform.position = transform.position;
-            player.transform.rotation = transform.rotation;
+            if (HidePoint != null)
+            {
+                player.transform.position = HidePoint.position;
+                player.transform.rotation = HidePoint.rotation;
+            }
+        }
+        else
+        {
+            if (UnhidePoint != null)
+            {
+                player.transform.position = UnhidePoint.position;
+                player.transform.rotation = UnhidePoint.rotation;
+            }
         }
 
     }
