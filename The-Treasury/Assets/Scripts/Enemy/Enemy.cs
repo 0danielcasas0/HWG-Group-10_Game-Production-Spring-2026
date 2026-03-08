@@ -24,6 +24,36 @@ public class Enemy : MonoBehaviour
 
     private NavMeshAgent agent; // Reference to the agent
 
+    private bool isCatching = false;
+
+    private enum EnemyState { Patrol, Searching, Chase }
+    private EnemyState currentState = EnemyState.Patrol;
+    private Vector3 lastSeenPosition;
+    private Vector3 lastHeardPosition;
+    private bool wasChasingDueToSight = false;
+    private Vector3 searchTarget;
+
+    private float searchTimer = 0f;
+    private float searchDuration = 3f; // Time to spend searching before returning to patrol
+    private bool isSearching = false;
+    private float lookAngle = 45f;
+    private float lookSpeed = 2f;
+    private float lookTime = 0f;
+    private float originalRotationY;
+
+    private bool previousIsHiding = false;
+    private bool wasChasingWhenHidingStarted = false;
+
+    private float waypointTimer = 0f;
+    private float maxWaypointTime = 10f; // Time before considering stuck
+    public bool isStuck = false;
+    private Vector3 roamTarget;
+    private float roamTimer = 0f;
+    private float maxRoamTime = 5f; // Time to spend roaming
+    private float roamRadius = 5f; // Distance to roam
+
+    private float searchWaypointTimer = 0f;
+
     private void Start()
     {
         // Get reference to PlayerStats on the player GameObject
@@ -35,12 +65,15 @@ public class Enemy : MonoBehaviour
         FindPlayer();
 
         ResetCaughtTimer = CaughtTimer;
+        // Look around
+        originalRotationY = transform.rotation.eulerAngles.y;
     }
 
     private void Update()
     {
         StealthCheck();
-        Chase();
+        UpdateState();
+        Move();
         Catch();
     }
 
@@ -55,39 +88,177 @@ public class Enemy : MonoBehaviour
 
     private void Patrol()
     {
-        // Set the destination to the current waypoint
-        agent.SetDestination(Waypoints[currentWaypointIndex].position);
-
-        // Check if we've arrived
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        if (isStuck)
         {
-            currentWaypointIndex = (currentWaypointIndex + 1) % Waypoints.Length;
+            // Roaming behavior
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            {
+                // Finished roaming, try waypoint again
+                isStuck = false;
+                waypointTimer = 0f;
+                roamTimer = 0f;
+            }
+            else
+            {
+                roamTimer += Time.deltaTime;
+                if (roamTimer > maxRoamTime)
+                {
+                    // Roam timeout, try waypoint again
+                    isStuck = false;
+                    waypointTimer = 0f;
+                    roamTimer = 0f;
+                }
+            }
+        }
+        else
+        {
+            // Normal patrol to waypoint
+            agent.SetDestination(Waypoints[currentWaypointIndex].position);
+
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            {
+                // Arrived at waypoint
+                currentWaypointIndex = (currentWaypointIndex + 1) % Waypoints.Length;
+                waypointTimer = 0f;
+            }
+            else
+            {
+                waypointTimer += Time.deltaTime;
+                if (waypointTimer > maxWaypointTime)
+                {
+                    // Stuck, start roaming
+                    isStuck = true;
+                    roamTimer = 0f;
+                    // Set random roam target
+                    Vector3 randomDir = Random.insideUnitSphere * roamRadius;
+                    randomDir.y = 0;
+                    roamTarget = transform.position + randomDir;
+                    agent.SetDestination(roamTarget);
+                }
+            }
         }
     }
 
-    private void Chase()
+    private void UpdateState()
     {
+        // Check if hiding state changed
+        if (playerStats.IsHiding != previousIsHiding)
+        {
+            if (playerStats.IsHiding)
+            {
+                wasChasingWhenHidingStarted = (currentState == EnemyState.Chase);
+            }
+        }
+        previousIsHiding = playerStats.IsHiding;
+
         bool canSeePlayer = false;
         if (Vision != null)
         {
             canSeePlayer = Vision.CanSeePlayer;
         }
 
-        if (PlayerTransform != null && (Vector3.Distance(transform.position, PlayerTransform.position) <= DetectionRange || canSeePlayer))
+        float distance = Vector3.Distance(transform.position, PlayerTransform.position);
+        bool inDetectionRange = distance <= DetectionRange;
+        bool canDetectByRange = inDetectionRange && (playerStats.IsMoving || isCatching);
+
+        // If hiding and hiding didn't start during chase, disable all detection
+        if (playerStats.IsHiding && !wasChasingWhenHidingStarted)
         {
-            agent.SetDestination(PlayerTransform.position);
-            agent.speed = ChaseSpeed;
+            canSeePlayer = false;
+            canDetectByRange = false;
+        }
+
+        if (canDetectByRange || canSeePlayer)
+        {
+            currentState = EnemyState.Chase;
+            if (canSeePlayer)
+            {
+                wasChasingDueToSight = true;
+                lastSeenPosition = PlayerTransform.position;
+            }
+            else if (canDetectByRange)
+            {
+                wasChasingDueToSight = false;
+                lastHeardPosition = PlayerTransform.position;
+            }
             playerStats.PlayerSeen = true;
         }
         else
         {
-            agent.speed = PatrolSpeed;
-            playerStats.PlayerSeen = false;
-            if (Waypoints.Length > 0)
+            if (currentState == EnemyState.Chase)
             {
+                currentState = EnemyState.Searching;
+                // Set search target based on what caused the chase
+                if (wasChasingDueToSight)
+                {
+                    searchTarget = lastSeenPosition;
+                }
+                else
+                {
+                    searchTarget = lastHeardPosition;
+                }
+            }
+            playerStats.PlayerSeen = false;
+        }
+    }
+
+    private void Move()
+    {
+        switch (currentState)
+        {
+            case EnemyState.Patrol:
                 Patrol();
+                agent.speed = PatrolSpeed;
+                break;
+            case EnemyState.Searching:
+                Search();
+                agent.speed = PatrolSpeed;
+                break;
+            case EnemyState.Chase:
+                agent.SetDestination(PlayerTransform.position);
+                agent.speed = ChaseSpeed;
+                break;
+        }
+    }
+
+    private void Search()
+    {
+        agent.SetDestination(searchTarget);
+        // Check if arrived
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            if (!isSearching)
+            {
+                isSearching = true;
+                searchTimer = searchDuration;
+                lookTime = 0f;
+                originalRotationY = transform.eulerAngles.y; // Update facing direction for looking
+            }
+            LookAround();
+            searchTimer -= Time.deltaTime;
+            if (searchTimer <= 0f)
+            {
+                currentState = EnemyState.Patrol;
+                isSearching = false;
             }
         }
+        else
+        {
+            searchWaypointTimer += Time.deltaTime;
+            if (searchWaypointTimer > maxWaypointTime)
+            {
+                // Stuck, go back to patrolling
+                currentState = EnemyState.Patrol;
+            }
+            isSearching = false;
+        }
+    }
+
+    private void LookAround()
+    {
+        lookTime += Time.deltaTime * lookSpeed;
+        float angle = Mathf.Sin(lookTime) * lookAngle;
+        transform.rotation = Quaternion.Euler(0, originalRotationY + angle, 0);
     }
 
     private void StealthCheck()
@@ -108,6 +279,7 @@ public class Enemy : MonoBehaviour
         // Check if the enemy has reached within 2 units of the player for CaughtTimer to trigger the caught state
         if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) <= CatchDistance)
         {
+            isCatching = true;
             CaughtTimer -= Time.deltaTime;
             if (CaughtTimer <= 0f)
             {
@@ -117,6 +289,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+            isCatching = false;
             CaughtTimer = ResetCaughtTimer; // Reset the timer if the player moves out of range
         }
     }

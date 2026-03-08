@@ -17,6 +17,9 @@ public class Crate : MonoBehaviour, IInteractable
         playerStats = player.GetComponent<PlayerStats>();
         playerStats.IsHiding = !playerStats.IsHiding;  // Toggle hiding state
 
+        // Resets player scale to normal height
+        player.transform.localScale = new Vector3(1, 1, 1);
+        
 
         if (playerStats.IsHiding)
         {
@@ -24,6 +27,7 @@ public class Crate : MonoBehaviour, IInteractable
             {
                 player.transform.position = HidePoint.position;
                 player.transform.rotation = HidePoint.rotation;
+                playerStats.IsStealthy = true;
             }
         }
         else
@@ -32,6 +36,7 @@ public class Crate : MonoBehaviour, IInteractable
             {
                 player.transform.position = UnhidePoint.position;
                 player.transform.rotation = UnhidePoint.rotation;
+                playerStats.IsStealthy = false;
             }
         }
 

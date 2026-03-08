@@ -9,4 +9,5 @@ public class PlayerStats : MonoBehaviour
     public bool IsStealthy = false;
     public bool PlayerSeen = false;
     public bool IsHiding = false;
+    public bool IsMoving = false;
 }

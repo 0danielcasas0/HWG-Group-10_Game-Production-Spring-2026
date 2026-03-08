@@ -234,6 +234,9 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveDir = transform.forward * MoveInput.y
                         + transform.right * MoveInput.x;
 
+        // Set IsMoving based on input magnitude
+        playerStats.IsMoving = moveDir.magnitude > 0.1f;
+
         // Calculates final movement speed
         float finalSpeed = MoveSpeed * currentSpeedMultiplier;
 
