@@ -11,7 +11,7 @@ public class Key : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (playerStats != null)
+        if (playerStats != null && !playerStats.HasKey)
         {
             playerStats.HasKey = true; // Update the player's stats to indicate they have the key
             Destroy(gameObject); // Destroy the key object after collection
