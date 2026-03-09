@@ -6213,6 +6213,7 @@ MonoBehaviour:
   WinScreen: {fileID: 1504959597}
   LoseScreen: {fileID: 703196385}
   BGMSource: {fileID: 62700196}
+  BGMSource2: {fileID: 1637071556}
   WinSoundSource: {fileID: 444520668}
   LoseSoundSource: {fileID: 590953438}
 --- !u!114 &498819593
@@ -21014,6 +21015,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc60395ac65bd1c47976b492c55937ed, type: 3}
+--- !u!82 &1637071556 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2652245729589548547, guid: 4c7d25fa884afea45b26239f9c23b253, type: 3}
+  m_PrefabInstance: {fileID: 1101533175}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1639336907 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3a456d8e72ad82e47a74ca986a7807fa, type: 3}
