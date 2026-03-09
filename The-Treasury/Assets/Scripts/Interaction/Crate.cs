@@ -24,7 +24,7 @@ public class Crate : MonoBehaviour, IInteractable
         // Play sound effect when playter hides or unhides
         if (BarrelSound != null)
         {
-            AudioSource.PlayClipAtPoint(BarrelSound, player.transform.position);
+            AudioSource.PlayClipAtPoint(BarrelSound, player.transform.position, 0.2f);
         }
 
 

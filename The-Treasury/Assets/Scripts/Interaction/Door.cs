@@ -6,6 +6,11 @@ public class Door : MonoBehaviour, IInteractable
     public bool IsLocked = true;
     public bool IsOpen = false;
 
+    // Door Audiosources
+    public AudioSource DoorOpeningSound;
+    public AudioSource DoorClosingSound;
+    public AudioSource DoorLockedSound;
+
     public void Interact()
     {
         // Check if the player has the key before allowing interaction
@@ -15,12 +20,14 @@ public class Door : MonoBehaviour, IInteractable
         {
             if (playerStats != null && playerStats.HasKey)
             {
+                DoorOpeningSound.Play();
                 IsLocked = false;
                 playerStats.HasKey = false; // Consume key only when unlocking
                 Debug.Log("Door unlocked!");
             }
             else
             {
+                DoorLockedSound.Play();
                 Debug.Log("You need a key to unlock this door.");
             }
         }
@@ -31,6 +38,15 @@ public class Door : MonoBehaviour, IInteractable
             {
                 float angle = IsOpen ? 90f : -90f;
                 Hinge.transform.Rotate(Vector3.up, angle);
+                if (IsOpen == false)
+                {
+                    DoorClosingSound.Play();
+                }
+                else                
+                {
+                    DoorOpeningSound.Play();
+                }
+
             }
             Debug.Log(IsOpen ? "Door opened!" : "Door closed!");
         }

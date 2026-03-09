@@ -8,6 +8,10 @@ public class WinLose : MonoBehaviour
 
     [SerializeField] private GameObject WinScreen;
     [SerializeField] private GameObject LoseScreen;
+    [SerializeField] private AudioSource BGMSource;
+    [SerializeField] private AudioSource WinSoundSource;
+    [SerializeField] private AudioSource LoseSoundSource;
+
 
     private PlayerMovement PlayerMovement;
     private PlayerStats playerStats;
@@ -38,12 +42,14 @@ public class WinLose : MonoBehaviour
         // Makes the WinScreen appear and stops playerMovement, and unlocks the cursor.
         gameEnded = true;
         WinScreen.SetActive(true);
+        WinSoundSource.Play();
         EndGame();
     }
     public void LoseLevel()
     {
         gameEnded = true;
         LoseScreen.SetActive(true);
+        LoseSoundSource.Play();
         EndGame();
     }
 
@@ -56,6 +62,9 @@ public class WinLose : MonoBehaviour
         // Stop enemy.
         if (Enemy != null)
             Enemy.enabled = false;
+
+        // Stop BGM
+        BGMSource.Stop();
 
         // Unlock cursor.
         Cursor.lockState = CursorLockMode.None;
