@@ -176,14 +176,6 @@ PrefabInstance:
       value: Door
       objectReference: {fileID: 0}
     - target: {fileID: 5535046890252068906, guid: 92fda46c10b9e584bbbfd87ca60e0685, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2.56225
-      objectReference: {fileID: 0}
-    - target: {fileID: 5535046890252068906, guid: 92fda46c10b9e584bbbfd87ca60e0685, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2.4999995
-      objectReference: {fileID: 0}
-    - target: {fileID: 5535046890252068906, guid: 92fda46c10b9e584bbbfd87ca60e0685, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.0421001
       objectReference: {fileID: 0}
@@ -223,60 +215,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7870254167045568246, guid: 92fda46c10b9e584bbbfd87ca60e0685, type: 3}
+      propertyPath: Hinge
+      value: 
+      objectReference: {fileID: 7157982132609649514}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5159928348220764816, guid: 92fda46c10b9e584bbbfd87ca60e0685, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4574635124945599811}
-    - targetCorrespondingSourceObject: {fileID: 5159928348220764816, guid: 92fda46c10b9e584bbbfd87ca60e0685, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1382871695839849084}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92fda46c10b9e584bbbfd87ca60e0685, type: 3}
---- !u!1 &6303135715891453362 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5159928348220764816, guid: 92fda46c10b9e584bbbfd87ca60e0685, type: 3}
-  m_PrefabInstance: {fileID: 1216679947345800994}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &4574635124945599811
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6303135715891453362}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.4556298, y: 1.0043411, z: 0.08107877}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1382871695839849084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6303135715891453362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36055cbbc0eee4645907a6fbffb95d12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Door
-  Hinge: {fileID: 7157982132609649514}
-  IsLocked: 0
-  IsOpen: 0
-  DoorOpeningSound: {fileID: 0}
-  DoorLockedSound: {fileID: 0}
 --- !u!4 &6643632045567887112 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5535046890252068906, guid: 92fda46c10b9e584bbbfd87ca60e0685, type: 3}
