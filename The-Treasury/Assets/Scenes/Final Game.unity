@@ -5828,7 +5828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17dba64f82955284594f78a57f1bbe2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DisplayKeyGet
-  PlayerStats: {fileID: 0}
+  PlayerStats: {fileID: 2048673843}
   KeyGet: {fileID: 1238021588}
   notifDuration: 2
 --- !u!1 &500048055
@@ -15470,7 +15470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17dba64f82955284594f78a57f1bbe2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  PlayerStats: {fileID: 0}
+  PlayerStats: {fileID: 2048673843}
   KeyGet: {fileID: 1238021588}
   notifDuration: 2
 --- !u!114 &1238021591
@@ -24806,6 +24806,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47b3555a059d20048938e1a4fbefb0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+--- !u!114 &2048673843 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7341522642356856855, guid: f29bc07ff61f6074b9c0a7ad80686b37, type: 3}
+  m_PrefabInstance: {fileID: 1414387267}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048673838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3d3e6725487ce4990338f945d72ba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
 --- !u!1001 &2058659961
 PrefabInstance:
   m_ObjectHideFlags: 0
