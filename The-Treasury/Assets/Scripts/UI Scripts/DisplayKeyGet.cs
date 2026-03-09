@@ -7,19 +7,17 @@ public class DisplayKeyGet : MonoBehaviour
 
     public float notifDuration = 3f;
 
-    private bool notifTriggered;
     private float timer;
 
     void Update()
     {
-        if (PlayerStats.HasKey && !notifTriggered)
+        if (PlayerStats.HasKey)
         {
             KeyGet.SetActive(true);
-            notifTriggered = true;
             timer = notifDuration;
         }
 
-        if (notifTriggered && KeyGet.activeSelf)
+        if (KeyGet.activeSelf)
         {
             timer -= Time.deltaTime;
 

@@ -9,6 +9,7 @@ public class WinLose : MonoBehaviour
     [SerializeField] private GameObject WinScreen;
     [SerializeField] private GameObject LoseScreen;
     [SerializeField] private AudioSource BGMSource;
+    [SerializeField] private AudioSource BGMSource2;
     [SerializeField] private AudioSource WinSoundSource;
     [SerializeField] private AudioSource LoseSoundSource;
 
@@ -65,6 +66,8 @@ public class WinLose : MonoBehaviour
 
         // Stop BGM
         BGMSource.Stop();
+        BGMSource2.Stop();
+
 
         // Unlock cursor.
         Cursor.lockState = CursorLockMode.None;
