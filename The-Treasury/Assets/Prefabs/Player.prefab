@@ -220,6 +220,7 @@ MonoBehaviour:
   IsStealthy: 0
   PlayerSeen: 0
   IsHiding: 0
+  IsMoving: 0
 --- !u!114 &7348060134946290724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +236,7 @@ MonoBehaviour:
   MoveSpeed: 5
   rb: {fileID: 0}
   FootstepAudioSource: {fileID: 0}
+  RunningAudioSource: {fileID: 0}
   movementThreshold: 0.1
   MouseSensitivity: 0.1
   CameraTransform: {fileID: 7485928006677044243}
@@ -480,13 +482,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8688086227598100766}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1, y: 1.2, z: 1.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1385536392098857028}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &4834872536498528688
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -494,7 +496,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8688086227598100766}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 9182741336286045942, guid: e2ca9dc11b4b72648b0c23463f51546b, type: 3}
 --- !u!23 &5988675541140157877
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -520,7 +522,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 30bec81ad49e5334eafb40c169230b9d, type: 2}
+  - {fileID: 2100000, guid: a6d78e9a8ca71e245aafd8a63cfceadf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
