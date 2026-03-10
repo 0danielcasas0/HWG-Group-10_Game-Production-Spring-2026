@@ -9997,10 +9997,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 37359991773930906, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 363e0f549b5a1a04db0c3cb34d4f38dd, type: 2}
+    - target: {fileID: 3171548781646983989, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 363e0f549b5a1a04db0c3cb34d4f38dd, type: 2}
     - target: {fileID: 4391924913452911664, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
       propertyPath: m_Name
       value: Train
       objectReference: {fileID: 0}
+    - target: {fileID: 5269162020855117516, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 363e0f549b5a1a04db0c3cb34d4f38dd, type: 2}
+    - target: {fileID: 5483956911840077162, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 363e0f549b5a1a04db0c3cb34d4f38dd, type: 2}
+    - target: {fileID: 6831147717901100876, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 363e0f549b5a1a04db0c3cb34d4f38dd, type: 2}
+    - target: {fileID: 7065896359985538361, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 363e0f549b5a1a04db0c3cb34d4f38dd, type: 2}
+    - target: {fileID: 7433024619356422327, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 363e0f549b5a1a04db0c3cb34d4f38dd, type: 2}
+    - target: {fileID: 8444857759540506126, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 363e0f549b5a1a04db0c3cb34d4f38dd, type: 2}
     - target: {fileID: 9204135996742897541, guid: 4238ed5b097811d43a66169a710f5581, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
