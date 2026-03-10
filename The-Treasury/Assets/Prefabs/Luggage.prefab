@@ -96,6 +96,18 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -5898410387528613345, guid: 36d21dbd0a933e440add9326c62dc9f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1cc242b9223c76546b80945e49e0b400, type: 2}
+    - target: {fileID: -5581537380815334119, guid: 36d21dbd0a933e440add9326c62dc9f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1cc242b9223c76546b80945e49e0b400, type: 2}
+    - target: {fileID: -421142657325693890, guid: 36d21dbd0a933e440add9326c62dc9f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1cc242b9223c76546b80945e49e0b400, type: 2}
     - target: {fileID: 919132149155446097, guid: 36d21dbd0a933e440add9326c62dc9f5, type: 3}
       propertyPath: m_Name
       value: luggageNEW
@@ -103,7 +115,7 @@ PrefabInstance:
     - target: {fileID: 7441667611452469836, guid: 36d21dbd0a933e440add9326c62dc9f5, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 8252f4da177f6be4d97ce72b221a9779, type: 2}
+      objectReference: {fileID: 2100000, guid: 1cc242b9223c76546b80945e49e0b400, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
