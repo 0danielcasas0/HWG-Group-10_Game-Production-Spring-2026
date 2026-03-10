@@ -68,9 +68,11 @@ public class PlayerMovement : MonoBehaviour
     // Groups look-related variables in the Inspector
     [Header("Look Settings")]
     public float MouseSensitivity = 0.1f;        // Controls mouse look sensitivity
+    public float GamepadSensitivity = 0.1f;      // Controls gamepad look sensitivity
     public Transform CameraTransform;             // Reference to the camera transform
     private Vector2 lookInput;                   // Stores mouse movement input
     private float xRotation = 0f;                // Vertical camera rotation (pitch)
+    public bool IsUsingGamepad;                  // True when gamepad input is detected, false for keyboard
     #endregion
 
     #region === Jump Settings ===
@@ -93,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
     public float CrouchHeight = 1f;              // Player height while crouching
     public float NormalHeight = 2f;              // Player height while standing
     public float CrouchSpeedMultiplier = 0.5f;  // Speed reduction while crouching
+    private bool isCrouched = false;             // Tracks crouch state for toggle mode
     #endregion
 
     #region === Stamina Settings ===
@@ -151,6 +154,11 @@ public class PlayerMovement : MonoBehaviour
     // OnInteract check what the player is looking at and interact with it if possible (e.g. picking up keys, opening doors)
     public void OnInteract(InputAction.CallbackContext context)
     {
+        if (context.performed)
+        {
+            IsUsingGamepad = context.control.device is Gamepad;
+        }
+
         if (context.started) 
         {
             Debug.Log("Interact button pressed, checking for interactables...");
@@ -173,32 +181,65 @@ public class PlayerMovement : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         MoveInput = context.ReadValue<Vector2>(); // Reads WASD / joystick movement input
+        if (context.performed)
+        {
+            IsUsingGamepad = context.control.device is Gamepad;
+        }
     }
 
     // Crouching may have to change from scaling to just lowering camera position
     // Called by the Input System when crouch input changes
     public void OnCrouch(InputAction.CallbackContext context)
     {
+        if (context.performed)
+        {
+            IsUsingGamepad = context.control.device is Gamepad;
+        }
+
         if (playerStats.IsHiding) return;
 
-        if (context.performed)                    // When crouch button is pressed
+        if (context.performed)
         {
-            // Scales the player down vertically to crouch
-            transform.localScale = new Vector3(1, CrouchHeight / NormalHeight, 1);
-            playerStats.IsStealthy = true;
+            if (IsUsingGamepad)
+            {
+                // Toggle crouch for gamepad
+                isCrouched = !isCrouched;
+                if (isCrouched)
+                {
+                    // Scales the player down vertically to crouch
+                    transform.localScale = new Vector3(1, CrouchHeight / NormalHeight, 1);
+                    playerStats.IsStealthy = true;
+                }
+                else
+                {
+                    // Resets player scale to normal height
+                    transform.localScale = new Vector3(1, 1, 1);
+                    playerStats.IsStealthy = false;
+                }
+            }
+            else
+            {
+                // Hold to crouch for keyboard
+                transform.localScale = new Vector3(1, CrouchHeight / NormalHeight, 1);
+                playerStats.IsStealthy = true;
+            }
         }
-        else if (context.canceled)                // When crouch button is released
+        else if (context.canceled && !IsUsingGamepad)
         {
-            // Resets player scale to normal height
+            // Release to stand for keyboard
             transform.localScale = new Vector3(1, 1, 1);
             playerStats.IsStealthy = false;
-
         }
     }
 
     // Called by the Input System when jump input changes
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (context.performed)
+        {
+            IsUsingGamepad = context.control.device is Gamepad;
+        }
+
         if (playerStats.IsHiding) return;
 
         // Only jump when the button is first pressed AND the player is grounded
@@ -215,6 +256,11 @@ public class PlayerMovement : MonoBehaviour
     // Called by the Input System when sprint input changes
     public void OnSprint(InputAction.CallbackContext context)
     {
+        if (context.performed)
+        {
+            IsUsingGamepad = context.control.device is Gamepad;
+        }
+
         if (context.started || context.performed) // Sprint button pressed or held
             IsSprinting = true;
         else if (context.canceled)                // Sprint button released
@@ -225,6 +271,10 @@ public class PlayerMovement : MonoBehaviour
     public void OnLook(InputAction.CallbackContext context)
     {
         lookInput = context.ReadValue<Vector2>(); // Reads mouse movement delta
+        if (context.performed)
+        {
+            IsUsingGamepad = context.control.device is Gamepad;
+        }
     }
 
     #endregion
@@ -234,14 +284,17 @@ public class PlayerMovement : MonoBehaviour
     // Handles mouse look logic
     private void HandleLook()
     {
+        // Choose sensitivity based on input device
+        float sensitivity = IsUsingGamepad ? GamepadSensitivity : MouseSensitivity;
+
         // Horizontal rotation (turns the player body)
-        float mouseX = lookInput.x * MouseSensitivity;
+        float mouseX = lookInput.x * sensitivity;
         transform.Rotate(Vector3.up * mouseX);
 
         // Vertical rotation (tilts the camera)
-        float mouseY = lookInput.y * MouseSensitivity;
+        float mouseY = lookInput.y * sensitivity;
         xRotation -= mouseY;                      // Invert for natural FPS feel
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Prevents over-rotation
+        xRotation = Mathf.Clamp(xRotation, -90f, 50f); // Prevents over-rotation
         CameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
@@ -257,6 +310,10 @@ public class PlayerMovement : MonoBehaviour
 
         // Calculates final movement speed
         float finalSpeed = MoveSpeed * currentSpeedMultiplier;
+        if (isCrouched)
+        {
+            finalSpeed *= CrouchSpeedMultiplier;
+        }
 
         // Applies movement while preserving vertical velocity (gravity/jumping)
         rb.linearVelocity = new Vector3(

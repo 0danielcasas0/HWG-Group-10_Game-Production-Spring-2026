@@ -17378,6 +17378,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: a6d78e9a8ca71e245aafd8a63cfceadf, type: 2}
     - target: {fileID: 7348060134946290724, guid: f29bc07ff61f6074b9c0a7ad80686b37, type: 3}
+      propertyPath: GamepadSensitivity
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7348060134946290724, guid: f29bc07ff61f6074b9c0a7ad80686b37, type: 3}
       propertyPath: RunningAudioSource
       value: 
       objectReference: {fileID: 832195994}
