@@ -8,7 +8,7 @@ public class QuitManager : MonoBehaviour
 		
 		Debug.Log("Quit button pressed\nGame exiting...");
 		Application.Quit();
-		UnityEditor.EditorApplication.isPlaying = false;
+		//UnityEditor.EditorApplication.isPlaying = false;
 
 	}
 }
