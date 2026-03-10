@@ -807,7 +807,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ff5ab347634acd940a2cfc9a9b69a289, type: 2}
     - target: {fileID: 9062975145862768037, guid: 10b398ed8284d3749996cf8bb4b9f6ef, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.62
+      value: -3.559
       objectReference: {fileID: 0}
     - target: {fileID: 9062975145862768037, guid: 10b398ed8284d3749996cf8bb4b9f6ef, type: 3}
       propertyPath: m_LocalPosition.y
@@ -21224,6 +21224,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4914427311378744381, guid: 5fa58e9cf49026e42a3c4ef499e72ee4, type: 3}
+      propertyPath: CollectSound
+      value: 
+      objectReference: {fileID: 920620455}
     - target: {fileID: 7026538543086035570, guid: 5fa58e9cf49026e42a3c4ef499e72ee4, type: 3}
       propertyPath: m_Name
       value: Tuto Key Variant
